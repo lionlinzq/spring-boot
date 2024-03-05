@@ -41,6 +41,6 @@ jobs:
           uri: 'https://repo.spring.io'
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          build-name: ${{ format('spring-boot-{0}', github_ref_name)}}
+          build-name: ${{ format('spring-boot-{0}', github.ref_name)}}
           repository: 'test-libs-snapshot-local'
           folder: 'deployment-repository'
