@@ -34,7 +34,7 @@ jobs:
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_SECRET_ACCESS_KEY }}
           GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USER }}
           GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
-        run: ./gradlew -PdeploymentRepository=$(pwd)/distribution-repository publishAllPublicationsToDeploymentRepository
+        run: ./gradlew -PdeploymentRepository=$(pwd)/deployment-repository publishAllPublicationsToDeploymentRepository
       - name: Deploy
         uses: wilkinsona/artifactory-github-action@f713a7b72aa1aa5029f9ce5745755938afe7ed03
         with:
