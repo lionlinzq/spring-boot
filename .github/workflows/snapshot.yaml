@@ -1,8 +1,5 @@
 name: Build and deploy snapshot
-on:
-  push:
-    branches:
-      - 3.1.x
+on: [push]
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 jobs:
