@@ -36,7 +36,7 @@ jobs:
           GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
         run: ./gradlew -PdeploymentRepository=deployment-repository publishAllPublicationsToDeploymentRepository
       - name: Deploy
-        uses: wilkinsona/artifactory-github-action@07e36f4da9c9a822719517200217ab5d4c6f9186
+        uses: wilkinsona/artifactory-github-action@f713a7b72aa1aa5029f9ce5745755938afe7ed03
         with:
           uri: 'https://repo.spring.io'
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
