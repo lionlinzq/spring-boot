@@ -1,12 +1,18 @@
+// 配置插件管理,用于统一管理所有Gradle插件的版本和仓库
 pluginManagement {
 	repositories {
-		maven { url "https://maven.aliyun.com/repository/public" } // 阿里云镜像仓库
+		// 配置阿里云Maven镜像仓库
+		maven { url "https://maven.aliyun.com/repository/public" }
+		// 配置Maven中央仓库
 		mavenCentral()
+		// 配置Gradle插件门户,用于获取Gradle官方插件
 		gradlePluginPortal()
+		// 如果当前版本是SNAPSHOT版本,则额外添加Spring快照仓库
 		if (version.endsWith('-SNAPSHOT')) {
 			maven { url "https://repo.spring.io/snapshot" }
 		}
 	}
+	// 配置插件版本解析策略,用于统一管理Kotlin插件的版本
 	resolutionStrategy {
 		eachPlugin {
 			if (requested.id.id == "org.jetbrains.kotlin.jvm") {
@@ -19,21 +25,28 @@ pluginManagement {
 	}
 }
 
+// 应用Gradle插件
 plugins {
+	// 应用Gradle企业版插件
 	id "com.gradle.enterprise" version "3.12.5"
+	// 应用Spring Gradle插件约定
 	id "io.spring.ge.conventions" version "0.0.13"
 }
 
+// 设置根项目名称
 rootProject.name="spring-boot-build"
 
+// 配置Gradle企业版构建扫描
 settings.gradle.projectsLoaded {
 	gradleEnterprise {
 		buildScan {
+			// 设置构建扫描标签
 			def toolchainVersion = settings.gradle.rootProject.findProperty('toolchainVersion')
 			if (toolchainVersion != null) {
 				value('Toolchain version', toolchainVersion)
 				tag("JDK-$toolchainVersion")
 			}
+			// 配置构建扫描结果输出
 			def buildDir = settings.gradle.rootProject.getBuildDir()
 			buildDir.mkdirs()
 			new File(buildDir, "build-scan-uri.txt").text = "build scan not generated"
@@ -45,6 +58,7 @@ settings.gradle.projectsLoaded {
 	}
 }
 
+// 包含Spring Boot子项目
 include "spring-boot-project:spring-boot-dependencies"
 include "spring-boot-project:spring-boot-parent"
 include "spring-boot-project:spring-boot-tools:spring-boot-antlib"
@@ -76,10 +90,12 @@ include "spring-boot-tests:spring-boot-integration-tests:spring-boot-server-test
 include "spring-boot-system-tests:spring-boot-deployment-tests"
 include "spring-boot-system-tests:spring-boot-image-tests"
 
+// 动态包含Spring Boot Starter子项目
 file("${rootDir}/spring-boot-project/spring-boot-starters").eachDirMatch(~/spring-boot-starter.*/) {
 	include "spring-boot-project:spring-boot-starters:${it.name}"
 }
 
+// 动态包含Spring Boot Smoke Tests子项目
 file("${rootDir}/spring-boot-tests/spring-boot-smoke-tests").eachDirMatch(~/spring-boot-smoke-test.*/) {
 	include "spring-boot-tests:spring-boot-smoke-tests:${it.name}"
 }
