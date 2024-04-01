@@ -1,15 +1,24 @@
+// 应用Gradle插件
 plugins {
+	// 应用基础插件
 	id "base"
+	// 应用Kotlin JVM插件,但不应用到子项目
 	id "org.jetbrains.kotlin.jvm" apply false // https://youtrack.jetbrains.com/issue/KT-30276
+	// 应用Spring NoHTTP插件,用于禁止HTTP连接
 	id "io.spring.nohttp" version "0.0.11"
 }
 
+// 设置项目描述
 description = "Spring Boot Build"
 
+// 设置默认任务为build
 defaultTasks 'build'
 
+// 配置Spring NoHTTP插件
 nohttp {
+	// 设置允许HTTP连接的白名单文件
 	allowlistFile = project.file("src/nohttp/allowlist.lines")
+	// 排除不需要扫描的目录和文件
 	source.exclude "**/bin/**"
 	source.exclude "**/build/**"
 	source.exclude "**/out/**"
@@ -20,29 +29,39 @@ nohttp {
 	source.exclude "spring-boot-project/spring-boot-tools/spring-boot-buildpack-platform/src/test/resources/org/springframework/boot/buildpack/platform/docker/export.tar"
 }
 
+// 将checkstyleNohttp任务添加到check任务的依赖项中
 check {
 	dependsOn checkstyleNohttp
 }
 
+// 配置所有子项目
 allprojects {
+	// 设置组织ID
 	group "org.springframework.boot"
 
+	// 配置仓库
 	repositories {
-		maven { url "https://maven.aliyun.com/repository/public" } // 阿里云镜像仓库
+		// 阿里云Maven镜像仓库
+		maven { url "https://maven.aliyun.com/repository/public" }
+		// Maven中央仓库
 		mavenCentral()
+		// 如果版本号包含"-",则添加Spring里程碑仓库
 		if (version.contains('-')) {
 			maven { url "https://repo.spring.io/milestone" }
 		}
+		// 如果版本号以"-SNAPSHOT"结尾,则添加Spring快照仓库
 		if (version.endsWith('-SNAPSHOT')) {
 			maven { url "https://repo.spring.io/snapshot" }
 		}
 	}
 
+	// 配置依赖解析缓存
 	configurations.all {
 		resolutionStrategy.cacheChangingModulesFor 0, "minutes"
 	}
 }
 
+// 配置checkstyleNohttp任务的最大堆内存
 tasks.named("checkstyleNohttp").configure {
 	maxHeapSize = "1536m"
 }
